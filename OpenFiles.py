@@ -2,7 +2,7 @@ import os
 
 # negative polarity
 # the r in front of the string indicates a raw string literal, which treats backslashes as literal characters
-negative_polarity = r"C:\Users\lotte\Documents\Artificial Intelligence\Data mining\Assignment\op_spam_v1.4\op_spam_v1.4\negative_polarity"
+negative_polarity = r"C:\Users\....\negative_polarity" # fill in your own path
 
 # listdir function: list all files and folders in a directory
 # isfile function: check if a path is a file   
