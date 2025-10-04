@@ -1,0 +1,1 @@
+#berekent accuracy, precision, recall, f1-score

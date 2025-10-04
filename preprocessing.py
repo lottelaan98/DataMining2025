@@ -1,0 +1,1 @@
+#functies voor textclaining en vectorization
