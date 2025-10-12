@@ -1,14 +1,46 @@
 #!/usr/bin/env python3
+"""
+main.py
+--------
+Voert de Single Classification Tree-analyse uit op de op_spam_v1.4 dataset.
+"""
 
-from preprocessing import load_op_spam, split_by_fold
-
+from preprocessing import load_op_spam, split_by_fold, vectorize_train_test
+from models import train_single_tree, get_top_features
+from evaluate import evaluate_model
 
 
 def main():
+    # === 1. Data inladen ===
     df = load_op_spam("data/op_spam_v1.4", polarities=("negative",))
-    train_df, test_df = split_by_fold(df, train_folds=(1,2,3,4), test_fold=5)
+    train_df, test_df = split_by_fold(df, test_fold=5)
 
-    print(f"Ingelezen: {len(df)} docs | Train: {len(train_df)} | Test: {len(test_df)}")
+    # === 2. Vectorisatie ===
+    X_train, X_test, y_train, y_test, vectorizer = vectorize_train_test(
+        train_df,
+        test_df,
+        ngram_range=(1, 1),    # (1, 2) voor unigrams + bigrams
+        use_tfidf=False,       # zet True voor TF-IDF
+        max_features=5000,
+    )
+
+    # === 3. Model trainen ===
+    model, best_alpha, cv_score = train_single_tree(X_train, y_train)
+    print("Beste ccp_alpha:", best_alpha)
+    print(f"Cross-validation score (F1): {cv_score:.4f}")
+
+    # === 4. Evalueren ===
+    scores = evaluate_model(model, X_test, y_test)
+    print("\n=== Testresultaten (fold 5) ===")
+    for k, v in scores.items():
+        print(f"{k.capitalize():>9}: {v:.4f}")
+
+    # === 5. Belangrijkste woorden ===
+    top_words = get_top_features(model, vectorizer, top_n=10)
+    print("\n=== Belangrijkste woorden ===")
+    for word, importance in top_words:
+        print(f"{word:20s} {importance:.6f}")
+
 
 if __name__ == "__main__":
     main()
