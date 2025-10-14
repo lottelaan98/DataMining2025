@@ -21,7 +21,7 @@ def main():
         train_df,
         test_df,
         ngram_range=(1, 1),    # (1, 2) voor unigrams + bigrams
-        use_tfidf=False,       # zet True voor TF-IDF
+        use_tfidf=False,       # rue voor TF-IDF
         max_features=5000,
     )
 
