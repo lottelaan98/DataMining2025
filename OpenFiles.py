@@ -1,5 +1,6 @@
 import os
 import pandas as pd
+import nltk
 
 # negative polarity
 # the r in front of the string indicates a raw string literal, which treats backslashes as literal characters
@@ -107,6 +108,36 @@ class FileLoader:
                     filename = entry # file name itself
                     content_list.append(FileContent(folder, subfolder, filename, content))
         return content_list
+    
+# class Word_preprocessing:
+#     @staticmethod
+    
+#     def stem_text(text):
+#         from nltk.stem import PorterStemmer
+#         ps = PorterStemmer()
+#         words = text.split()
+#         words = [ps.stem(word) for word in words]
+#         text = ' '.join(words)
+#         return text
+    
+#     def lemmatize_text(text):
+#         from nltk.stem import WordNetLemmatizer
+#         lemmatizer = WordNetLemmatizer()
+#         words = text.split()
+#         words = [lemmatizer.lemmatize(word) for word in words]
+#         text = ' '.join(words)
+#         return text
+    
+#     def apply_preprocessing(df, stopwords=None, stem=False, lemmatize=False):
+#         processed_contents = []
+#         for content in df['content']:
+#             if stem:
+#                 content = Word_preprocessing.stem_text(content)
+#             if lemmatize:
+#                 content = Word_preprocessing.lemmatize_text(content)
+#             processed_contents.append(content)
+#         df['content'] = processed_contents
+#         return df
     
 class Split_data:
     @staticmethod
