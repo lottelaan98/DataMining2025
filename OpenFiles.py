@@ -5,7 +5,6 @@ import pandas as pd
 import nltk 
 from nltk.stem import PorterStemmer, WordNetLemmatizer
 nltk.download('wordnet')
->>>>>>> Stashed changes
 
 # negative polarity
 # the r in front of the string indicates a raw string literal, which treats backslashes as literal characters
@@ -29,7 +28,6 @@ class FileContent:
         def __repr__(self):
                 return f"FileContent(folder={self.folder}, subfolder={self.subfolder}, filename={self.filename}, content={self.content})"
 
-<<<<<<< Updated upstream
 # defnies a function that takes a starting folder path and returns a list of all subfolder paths
 def load_files_recursive(base_folder):
     # content_list will store all FileContent objects
@@ -147,22 +145,17 @@ class Split_data:
         return train_df, test_df
     
 
->>>>>>> Stashed changes
 if __name__ == "__main__":
         # calls the function with the negative_polarity path and stores the result in files
-        files = load_files_recursive(negative_polarity) 
+        # files = FileLoader.load_files_recursive(negative_polarity) 
+
         # print(f"Total folders loaded: {len(set(file.folder for file in files))}")
         # print(f"Subfolders in folder: {len(set(file.subfolder for file in files))}")
         # print(f"Total subfolders loaded: {len(set(file.folder for file in files)) * len(set(file.subfolder for file in files))}")
         # print(f"Total files loaded: {len(files)}")
-<<<<<<< Updated upstream
-        print(files[0])
-=======
-
+        # print(files[0])
 
     train_df, test_df = Split_data.split_data(train=(1,2,3,4), test=(5,))
     print("Train:", train_df["subfolder"].value_counts().to_dict())
     print("Test :", test_df["subfolder"].value_counts().to_dict())
     print("Voorbeeld train-rij:\n", train_df.head(1))
-    print(test_df)
->>>>>>> Stashed changes
