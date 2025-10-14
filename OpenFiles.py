@@ -1,6 +1,4 @@
 import os
-<<<<<<< Updated upstream
-=======
 import pandas as pd
 import nltk 
 from nltk.stem import PorterStemmer, WordNetLemmatizer
