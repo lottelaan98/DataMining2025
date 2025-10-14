@@ -3,7 +3,7 @@ import pandas as pd
 
 # negative polarity
 # the r in front of the string indicates a raw string literal, which treats backslashes as literal characters
-negative_polarity = r"C:\Users\lotte\Documents\Artificial Intelligence\Data mining\Assignment\op_spam_v1.4\op_spam_v1.4\negative_polarity" # fill in your own path
+negative_polarity = r"data/op_spam_v1.4/negative_polarity" # fill in your own path
 
 # listdir function: list all files and folders in a directory
 # isfile function: check if a path is a file   
@@ -100,12 +100,18 @@ class FileLoader:
                 # open the file and read its content
                 # encoding="utf-8" ensures that special characters are read correctly. utf-8 is the most widely used 
                 # encoding today. It can represent any character in the Unicode standard (text characters from any language).
-                with open(path, "r", encoding="utf-8") as file:
-                    content = file.read() # reads its entire content into a string 
-                    folder = os.path.basename(os.path.dirname(base_folder)) # parent folder name
-                    subfolder = os.path.basename(base_folder) # current folder name
-                    filename = entry # file name itself
-                    content_list.append(FileContent(folder, subfolder, filename, content))
+                # probeer eerst UTF-8, val anders terug op Latin-1
+                try:
+                    with open(path, "r", encoding="utf-8") as file:
+                        content = file.read()
+                except UnicodeDecodeError:
+                    with open(path, "r", encoding="latin-1") as file:
+                        content = file.read()
+
+                folder = os.path.basename(os.path.dirname(base_folder))  # parent folder
+                subfolder = os.path.basename(base_folder)                # current folder
+                filename = entry                                         # file name
+                content_list.append(FileContent(folder, subfolder, filename, content))
         return content_list
     
 class Split_data:
