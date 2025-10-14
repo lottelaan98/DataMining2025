@@ -4,20 +4,34 @@ main.py
 --------
 Voert de Single Classification Tree-analyse uit op de op_spam_v1.4 dataset.
 """
+<<<<<<< Updated upstream
 
 from preprocessing import load_op_spam, split_by_fold, vectorize_train_test
 from models import train_single_tree, get_top_features, RandomF, GradBoost
+=======
+from OpenFiles import Split_data
+from RandomForest import train_single_tree, get_top_features, RandomF
+from GradBoost import GradBoost
+>>>>>>> Stashed changes
 from evaluate import evaluate_model
 
 
 def main():
     # === 1. Data inladen ===
+<<<<<<< Updated upstream
     df = load_op_spam("data/op_spam_v1.4", polarities=("negative",))
     train_df, test_df = split_by_fold(df, train_folds=(1,2,3,4), test_fold=5)
 
     print(f"Ingelezen: {len(df)} docs | Train: {len(train_df)} | Test: {len(test_df)}")
     RandomF(X_train=train_df['text'],Y_train=train_df['y'],X_test=test_df['text'],Y_test=test_df['y'],grid=False, m_features_vec=5000)
     GradBoost(X_train=train_df['text'],Y_train=train_df['y'],X_test=test_df['text'],Y_test=test_df['y'],grid=False)
+=======
+
+    train_df, test_df = Split_data.split_data(train=(1,2,3,4), test=(5,))
+
+    RandomF(X_train=train_df['content'],Y_train=train_df['label'],X_test=test_df['content'],Y_test=test_df['label'],grid=False, m_features_vec=5000)
+    # GradBoost(X_train=train_df['content'],Y_train=train_df['label'],X_test=test_df['content'],Y_test=test_df['label'],grid=False)
+>>>>>>> Stashed changes
 
     # # === 2. Vectorisatie ===
     # X_train, X_test, y_train, y_test, vectorizer = vectorize_train_test(
