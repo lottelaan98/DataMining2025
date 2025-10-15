@@ -20,10 +20,12 @@ class TrainModel1:
         # Train the model using the training data
         model.fit(train_df['content'], train_df['label'])
 
+        evaluate_model(model, test_df["content"], test_df["label"])
+
         return model
 
     @staticmethod
-    def hyperparameter_tuning1(train_df, test_df, vectorizer, vectorizer_ngram):
+    def hyperparameter_tuning1(train_df, vectorizer, vectorizer_ngram):
         # Create a pipeline that first vectorizes the text data and then applies the Multinomial Naive Bayes classifier
         model = make_pipeline(vectorizer, MultinomialNB())
 
@@ -34,14 +36,20 @@ class TrainModel1:
         }
 
         # Set up GridSearchCV
-        grid_search = GridSearchCV(model, param_grid, cv=5, n_jobs=-1, verbose=0)
+        grid_search = GridSearchCV(model, param_grid, cv=5, n_jobs=-1, verbose=1)
 
         # Perform the grid search on the training data
         grid_search.fit(train_df['content'], train_df['label'])
 
+        # Print the best parameters found by GridSearchCV
+        print("Best Parameters:", grid_search.best_params_)
+
+        best_model = grid_search.best_estimator_
+
+        evaluate_model(best_model, test_df["content"], test_df["label"])
+
         return grid_search.best_estimator_
     
-
     def give_feature_importance(pipeline_or_grid):
         pipe = pipeline_or_grid.best_estimator_ if isinstance(pipeline_or_grid, GridSearchCV) else pipeline_or_grid
         
@@ -62,47 +70,26 @@ class TrainModel1:
             print(f"\nTop 10 for class {cls} (index {i}):")
             for f, p in zip(feats, probs):
                 print(f"{f:20s} {p:.6f}")
-
     
-    def accuracyvalue(model, X_test, y_test):
-        # model is a fitted pipeline/estimator
-        y_pred = model.predict(X_test)
-        
-        return accuracy_score(y_test, y_pred)
-    
-
-def Output_MNB(train_df, test_df):
-    #train_df, test_df = Split_data.split_data(train=(1,2,3,4), test=(5,))
+if __name__ == "__main__":
+    train_df, test_df = Split_data.split_data(train=(1,2,3,4), test=(5,))
 
     models = [
         ("The countvectorizer model", "The tuned countvectorizer model", CountVectorizer(), "countvectorizer__ngram_range", "countvectorizer"),
         ("The countervectorizer model with preprocessing ", "The tuned countvectorizer model with preprocessing ", CountVectorizer(lowercase=True, stop_words="english"), "countvectorizer__ngram_range", "countvectorizer"),
         ("The tfifdvectorizer model ", "The tuned tfifdvectorizer model ", TfidfVectorizer(), 'tfidfvectorizer__ngram_range', "tfifdvectorizer"),
-        ("The tfifdvectorizer model with preprocessing ", "The tuned tfifdvectorizer model with preprocessing ", TfidfVectorizer(lowercase=True, stop_words="english"), 'tfidfvectorizer__ngram_range', "tfifdvectorizer")
+        ("The countervectorizer model with preprocessing ", "The tuned countervectorizer model with preprocessing ", TfidfVectorizer(lowercase=True, stop_words="english"), 'tfidfvectorizer__ngram_range', "tfifdvectorizer")
     ]
     
-    accuracy = []
-
     for i in models:
+        # Train the model and then tune the model
+        print(i[0],", and without hyperparameter tuning")
         model = TrainModel1.train_model(train_df, test_df, i[2])
-        accuracy.append([i[0], TrainModel1.accuracyvalue(model, test_df["content"], test_df["label"]), model])
-        best_model = TrainModel1.hyperparameter_tuning1(train_df, test_df, i[2], i[3])
-        accuracy.append([i[1], TrainModel1.accuracyvalue(best_model, test_df["content"], test_df["label"]), best_model])
-
-    best_model = []
-    highest_acc = 0
-
-    for highest in accuracy:
-        if highest[1] > highest_acc:
-            highest_acc = highest[1]
-            best_model = highest
-    
-    print("The best model is:", best_model[:2])
-    evaluate_model(best_model[2], test_df["content"], test_df["label"])
-    TrainModel1.give_feature_importance(best_model[2])
-
-
-    
-    
-
-
+        print(i[1])
+        best_model = TrainModel1.hyperparameter_tuning1(train_df, i[2], i[3])
+        # Get feature importance
+        print("Feature importance of ", i[0])
+        TrainModel1.give_feature_importance(model)
+        print("Feature importance of ", i[1])
+        TrainModel1.give_feature_importance(best_model)
+   

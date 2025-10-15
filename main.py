@@ -4,38 +4,20 @@ main.py
 --------
 Voert de Single Classification Tree-analyse uit op de op_spam_v1.4 dataset.
 """
-
 from OpenFiles import Split_data
 from RandomForest import train_single_tree, get_top_features, RandomF
 from GradBoost import GradBoost
-from LogisticRegressionWithLassoPenalty import Output_Logistic
-from MultinomialNaiveBayes import Output_MNB
-from ClassificationTree import ClassificationTree
+from evaluate import evaluate_model
 
 
 def main():
+    # === 1. Data inladen ===
 
     train_df, test_df = Split_data.split_data(train=(1,2,3,4), test=(5,))
 
-    print("Logistic regresioon with lasso penalty")
-    Output_Logistic(train_df, test_df)
-    print("\n")
-
-    print("Multinomial Naive Bayes")
-    Output_MNB(train_df, test_df)
-    print("\n")
-
-    print("Classification Tree")
-    ClassificationTree(train_df, test_df)
-    print("\n")
-
-    print("Randomforest")
     RandomF(X_train=train_df['content'],Y_train=train_df['label'],X_test=test_df['content'],Y_test=test_df['label'],grid=False, m_features_vec=5000)
-    print("\n")
+    # GradBoost(X_train=train_df['content'],Y_train=train_df['label'],X_test=test_df['content'],Y_test=test_df['label'],grid=False)
 
-    print("GradBoost")
-    GradBoost(X_train=train_df['content'],Y_train=train_df['label'],X_test=test_df['content'],Y_test=test_df['label'],grid=False)
-    
     # # === 2. Vectorisatie ===
     # X_train, X_test, y_train, y_test, vectorizer = vectorize_train_test(
     #     train_df,

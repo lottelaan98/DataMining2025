@@ -115,8 +115,8 @@ def RandomF(X_train,Y_train,X_test,Y_test,m_depth_bos=23,m_features_vec=5000,gri
 
         feature_importance_df = feature_importance_df.sort_values(by='importance', ascending=False)
 
-        print("\nTop 10 Most Important Features RandomForest:")
-        print(feature_importance_df.head(10))
+        print("\nTop 20 Most Important Features RandomForest:")
+        print(feature_importance_df.head(20))
         return bos
 
 

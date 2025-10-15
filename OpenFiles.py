@@ -3,16 +3,10 @@ import pandas as pd
 import nltk 
 from nltk.stem import PorterStemmer, WordNetLemmatizer
 nltk.download('wordnet')
-nltk.download('punkt_tab')
-nltk.download('stopwords')
-from collections import Counter
-from nltk.tokenize import word_tokenize, RegexpTokenizer
-from nltk.corpus import stopwords
-import re
 
 # negative polarity
 # the r in front of the string indicates a raw string literal, which treats backslashes as literal characters
-negative_polarity = r"data/op_spam_v1.4/negative_polarity" # fill in your own path
+negative_polarity = r"C:\Users\....\negative_polarity" # fill in your own path
 
 # listdir function: list all files and folders in a directory
 # isfile function: check if a path is a file   
@@ -60,6 +54,7 @@ def load_files_recursive(base_folder):
     return content_list
 
 # this block runs only if the file is executed directly, not if it's imported
+=======
 
 class FileLoader:
     @staticmethod
@@ -121,50 +116,6 @@ class Word_preprocessing:
         df['content'] = processed_contents
         return df
     
-    def stop_words(df):
-        stopw = set(stopwords.words("english"))
-        tokenizer = RegexpTokenizer(r'\w+')
-
-        def clean(text):
-            text = tokenizer.tokenize(text)
-            tokens = [t.lower() for t in text]
-            clean_words = [word for word in tokens if word not in stopw]
-            new_text = ' '.join(clean_words)
-            return new_text
-        
-        df = df.copy()
-        df.loc[:, 'content'] = df['content'].apply(clean)
-        
-        return df
-    
-    def create_custom_stopwords(df, threshold=0.0045):
-        # Count word frequencies across all texts
-        tokenizer = RegexpTokenizer(r'\w+')
-
-        all_words = []
-        for text in df["content"]:
-            words = word_tokenize(text.lower())
-            all_words.extend(words)
-        
-        word_freq = Counter(all_words)
-        total_words = len(all_words)
-        
-        # Words appearing more than threshold become stopwords
-        custom_stops = {word for word, freq in word_freq.items() 
-                    if freq / total_words > threshold}
-        
-        def clean(text):
-            text = tokenizer.tokenize(text)
-            tokens = [t.lower() for t in text]
-            clean_words = [word for word in tokens if word not in custom_stops]
-            new_text = ' '.join(clean_words)
-            return new_text
-
-        df = df.copy()
-        df.loc[:, 'content'] = df['content'].apply(clean)
-
-        return df
-    
 class Split_data:
     @staticmethod
     def split_data(file_list=negative_polarity, train=(1,2,3,4), test=(5,)):
@@ -189,12 +140,6 @@ class Split_data:
         train_df = df[df['subfolder'].isin(train_data).reset_index(drop=True)]
         test_df = df[df['subfolder'].isin(test_data).reset_index(drop=True)]
 
-        train_df = Word_preprocessing.stop_words(train_df)
-        test_df = Word_preprocessing.stop_words(test_df)
-
-        train_df = Word_preprocessing.create_custom_stopwords(train_df)
-        test_df = Word_preprocessing.create_custom_stopwords(test_df)
-
         return train_df, test_df
     
 
@@ -209,7 +154,6 @@ if __name__ == "__main__":
         # print(files[0])
 
     train_df, test_df = Split_data.split_data(train=(1,2,3,4), test=(5,))
-
     print("Train:", train_df["subfolder"].value_counts().to_dict())
     print("Test :", test_df["subfolder"].value_counts().to_dict())
     print("Voorbeeld train-rij:\n", train_df.head(1))
