@@ -6,15 +6,12 @@ def evaluate_model(model, X_test, y_test):
     y_pred = model.predict(X_test)
 
     print("accuracy: ", accuracy_score(y_test, y_pred))
-
     print("Table: ", classification_report(y_test, y_pred))
     print("confusion matrix: ", confusion_matrix(y_test, y_pred))
     
     return {
         "accuracy": accuracy_score(y_test, y_pred),
-        "precision": precision_score(y_test, y_pred),
-        "recall": recall_score(y_test, y_pred),
-        "f1": f1_score(y_test, y_pred),
+        "Table: ": classification_report(y_test, y_pred),
         "confusion matrix": confusion_matrix(y_test, y_pred)
     }
 
