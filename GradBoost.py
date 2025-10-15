@@ -69,6 +69,6 @@ def GradBoost(X_train,Y_train,X_test,Y_test,m_features_vec=5000,m_depth=15,lam=0
 
         feature_importance_df = feature_importance_df.sort_values(by='importance', ascending=False)
 
-        print("\nTop 20 Most Important Features:")
-        print(feature_importance_df.head(20))
+        print("\nTop 10 Most Important Features:")
+        print(feature_importance_df.head(10))
         return bos
