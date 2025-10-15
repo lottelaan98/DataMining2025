@@ -59,8 +59,6 @@ def load_files_recursive(base_folder):
                 content_list.append(FileContent(folder, subfolder, filename, content))
     return content_list
 
-# this block runs only if the file is executed directly, not if it's imported
-=======
 
 class FileLoader:
     @staticmethod
