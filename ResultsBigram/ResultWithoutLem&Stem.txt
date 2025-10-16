@@ -1,0 +1,172 @@
+WITHOUT LEMMETIZAITON AND STEMMING
+
+The best model is: ['The tfifdvectorizer model ', 0.725]
+With hyperparameters Pipeline(steps=[('tfidfvectorizer', TfidfVectorizer()),
+                ('logisticregression',
+                 LogisticRegression(max_iter=5000, penalty='l1',
+                                    solver='saga'))])
+accuracy:  0.725
+Table:                precision    recall  f1-score   support
+
+           0       0.71      0.76      0.73        80
+           1       0.74      0.69      0.71        80
+
+    accuracy                           0.72       160
+   macro avg       0.73      0.72      0.72       160
+weighted avg       0.73      0.72      0.72       160
+
+confusion matrix:  [[61 19]
+ [25 55]]
+Top positive words:
+luxury: 7.261
+smell: 5.971
+finally: 5.625
+recently: 4.987
+millennium: 4.706
+seemed: 4.306
+decided: 3.350
+experience: 3.010
+smelled: 2.376
+cleaned: 1.666
+
+Top negative words:
+location: -4.834
+great: -2.872
+floor: -2.762
+star: -2.499
+elevators: -1.404
+conference: -1.163
+open: -0.801
+construction: -0.790
+call: -0.688
+called: -0.618
+
+
+Multinomial Naive Bayes
+The best model is: ['The tfifdvectorizer model ', 0.84375]
+With hyperparameters Pipeline(steps=[('tfidfvectorizer', TfidfVectorizer()),
+                ('multinomialnb', MultinomialNB())])
+accuracy:  0.84375
+Table:                precision    recall  f1-score   support
+
+           0       0.92      0.75      0.83        80
+           1       0.79      0.94      0.86        80
+
+    accuracy                           0.84       160
+   macro avg       0.86      0.84      0.84       160
+weighted avg       0.86      0.84      0.84       160
+
+confusion matrix:  [[60 20]
+ [ 5 75]]
+
+Top 10 for class 0 (index 0):
+great                0.001017
+location             0.000948
+bed                  0.000929
+day                  0.000834
+never                0.000804
+good                 0.000798
+nice                 0.000792
+floor                0.000788
+called               0.000784
+front                0.000765
+
+Top 10 for class 1 (index 1):
+experience           0.000958
+time                 0.000924
+front                0.000923
+got                  0.000907
+could                0.000888
+finally              0.000831
+rude                 0.000818
+arrived              0.000814
+check                0.000811
+staying              0.000810
+
+
+Classification Tree
+
+Chosen hyperparemeters with highest accuracy value: {'max_depth': nan, 'min_samples_leaf': 1.0, 'ccp_alpha': 0.0, 'test_accuracy': 0.675}
+accuracy:  0.675
+Table:                precision    recall  f1-score   support
+
+           0       0.71      0.59      0.64        80
+           1       0.65      0.76      0.70        80
+
+    accuracy                           0.68       160
+   macro avg       0.68      0.68      0.67       160
+weighted avg       0.68      0.68      0.67       160
+
+confusion matrix:  [[47 33]
+ [19 61]]
+
+Top 10 Most Important Features ClassificationTree:
+                       feature  importance
+2897                  th floor    0.031222
+1056       fairmont millennium    0.025607
+1480           homewood suites    0.025463
+1104               finally got    0.023562
+1880  millennium knickerbocker    0.021283
+2070               non smoking    0.019660
+3114                 two hours    0.018457
+63             ambassador east    0.017252
+1546             hyatt regency    0.017204
+2737             sofitel water    0.016015
+
+
+Randomforest
+Shape of INPUT: (640, 5000)
+accuracy:  0.5875
+Table:                precision    recall  f1-score   support
+
+           0       0.55      0.90      0.69        80
+           1       0.73      0.28      0.40        80
+
+    accuracy                           0.59       160
+   macro avg       0.64      0.59      0.54       160
+weighted avg       0.64      0.59      0.54       160
+
+confusion matrix:  [[72  8]
+ [58 22]]
+
+Top 10 Most Important Features RandomForest:
+                       feature  importance
+4427                  th floor    0.022556
+3357           millennium park    0.021551
+3356  millennium knickerbocker    0.017672
+2482       fairmont millennium    0.017560
+3463              needless say    0.013676
+4655                 two hours    0.012724
+2999             hyatt regency    0.012513
+2929           homewood suites    0.012343
+2534               finally got    0.012111
+4256             sofitel water    0.012043
+
+
+GradBoost
+Shape of INPUT: (640, 5000)
+accuracy:  0.6
+Table:                precision    recall  f1-score   support
+
+           0       0.57      0.84      0.68        80
+           1       0.69      0.36      0.48        80
+
+    accuracy                           0.60       160
+   macro avg       0.63      0.60      0.58       160
+weighted avg       0.63      0.60      0.58       160
+
+confusion matrix:  [[67 13]
+ [51 29]]
+
+Top 10 Most Important Features:
+                       feature  importance
+4427                  th floor    0.025548
+3356  millennium knickerbocker    0.022365
+2999             hyatt regency    0.019517
+2482       fairmont millennium    0.019389
+2929           homewood suites    0.017558
+2534               finally got    0.016298
+4655                 two hours    0.014819
+4808               water tower    0.013198
+82             ambassador east    0.012803
+2867                 hard rock    0.012262

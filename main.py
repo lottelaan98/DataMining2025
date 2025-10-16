@@ -5,7 +5,7 @@ main.py
 Voert de Single Classification Tree-analyse uit op de op_spam_v1.4 dataset.
 """
 from OpenFiles import Split_data
-from RandomForest import train_single_tree, get_top_features, RandomF
+from RandomForest import RandomF
 from GradBoost import GradBoost
 from LogisticRegressionWithLassoPenalty import Output_Logistic
 from MultinomialNaiveBayes import Output_MNB

@@ -23,7 +23,7 @@ def GradBoost(X_train,Y_train,X_test,Y_test,m_features_vec=5000,m_depth=15,lam=0
           de default values die al ingevuld zijn (bij if not grid) zijn het resultaat van een gridsearch en behalen de hoogste accuracy
     """
 
-    vectorizer = TfidfVectorizer(max_features=m_features_vec, ngram_range=(1,2))
+    vectorizer = TfidfVectorizer(max_features=m_features_vec, ngram_range=(2, 2))
     X = vectorizer.fit_transform(X_train)
     print(f"Shape of INPUT: {X.shape}")
 

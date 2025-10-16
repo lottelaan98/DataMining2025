@@ -2,9 +2,9 @@ import os
 import pandas as pd
 import nltk 
 from nltk.stem import PorterStemmer, WordNetLemmatizer
-nltk.download('wordnet')
-nltk.download('punkt_tab')
-nltk.download('stopwords')
+# nltk.download('wordnet')
+# nltk.download('punkt_tab')
+# nltk.download('stopwords')
 from collections import Counter
 from nltk.tokenize import word_tokenize, RegexpTokenizer
 from nltk.corpus import stopwords
@@ -36,33 +36,6 @@ class FileContent:
 # __repr__ function: tells how to object is printed when you use print()
         def __repr__(self):
                 return f"FileContent(folder={self.folder}, subfolder={self.subfolder}, filename={self.filename}, content={self.content})"
-
-# defnies a function that takes a starting folder path and returns a list of all subfolder paths
-def load_files_recursive(base_folder):
-    # content_list will store all FileContent objects
-    content_list = []
-    # iterate over everything (entry) inside the base_folder 
-    for entry in os.listdir(base_folder):
-        # create the full path by joining the base_folder path with the entry name
-        path = os.path.join(base_folder, entry)
-        # check if the path is a directory (another folder) or a file
-        # if it's a directory (another folder), we need to go deeper and call the load_files_recursive function again
-        if os.path.isdir(path):
-            # call the function again with the new path
-            # use extend to add all the files foudn inside that subfolder into the current list
-            content_list.extend(load_files_recursive(path))
-        # if the path is a file, we can open it and read its content
-        elif os.path.isfile(path):
-            # open the file and read its content
-            # encoding="utf-8" ensures that special characters are read correctly. utf-8 is the most widely used 
-            # encoding today. It can represent any character in the Unicode standard (text characters from any language).
-            with open(path, "r", encoding="utf-8") as file:
-                content = file.read() # reads its entire content into a string 
-                folder = os.path.basename(os.path.dirname(base_folder)) # parent folder name
-                subfolder = os.path.basename(base_folder) # current folder name
-                filename = entry # file name itself
-                content_list.append(FileContent(folder, subfolder, filename, content))
-    return content_list
 
 
 class FileLoader:
@@ -127,7 +100,7 @@ class Word_preprocessing:
 
     def stop_words(df):
         stopw = set(stopwords.words("english"))
-        tokenizer = RegexpTokenizer(r'\w+')
+        tokenizer = RegexpTokenizer(r"[A-Za-z]+")
 
         def clean(text):
             text = tokenizer.tokenize(text)
@@ -225,6 +198,10 @@ class Split_data:
         train_df = Word_preprocessing.create_custom_stopwords(train_df)
         test_df = Word_preprocessing.create_custom_stopwords(test_df)
 
+
+        train_df = Word_preprocessing.apply_preprocessing(train_df)
+        test_df = Word_preprocessing.apply_preprocessing(test_df)
+
         return train_df, test_df
     
 
@@ -242,5 +219,6 @@ if __name__ == "__main__":
     print("Train:", train_df["subfolder"].value_counts().to_dict())
     print("Test :", test_df["subfolder"].value_counts().to_dict())
     print("Voorbeeld train-rij:\n", train_df.head(1))
+    print(train_df["content"].iloc[0])
 
     print(Visualise_data.topwords_barchart(train_df))

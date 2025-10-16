@@ -1,0 +1,173 @@
+RESULTS WITH STEMMING
+
+Logistic regresioon with lasso penalty
+The best model is: ['The tuned tfifdvectorizer model ', 0.8375]
+With hyperparameters Pipeline(steps=[('tfidfvectorizer', TfidfVectorizer()),
+                ('logisticregression',
+                 LogisticRegression(C=10.0, max_iter=5000, penalty='l1',
+                                    solver='saga'))])
+accuracy:  0.8375
+Table:                precision    recall  f1-score   support
+
+           0       0.80      0.90      0.85        80
+           1       0.89      0.78      0.83        80
+
+    accuracy                           0.84       160
+   macro avg       0.84      0.84      0.84       160
+weighted avg       0.84      0.84      0.84       160
+
+confusion matrix:  [[72  8]
+ [18 62]]
+Top positive words:
+recent: 20.812
+smell: 19.069
+luxuri: 18.008
+millennium: 16.825
+final: 13.658
+homewood: 12.937
+seem: 11.073
+expect: 10.910
+heart: 9.818
+make: 9.729
+
+Top negative words:
+world: -13.874
+star: -11.539
+secur: -10.664
+call: -10.571
+elev: -10.041
+cool: -9.299
+date: -8.864
+self: -8.736
+confer: -8.566
+bed: -8.333
+
+
+Multinomial Naive Bayes
+The best model is: ['The tfifdvectorizer model ', 0.84375]
+With hyperparameters Pipeline(steps=[('tfidfvectorizer', TfidfVectorizer()),
+                ('multinomialnb', MultinomialNB())])
+accuracy:  0.84375
+Table:                precision    recall  f1-score   support
+
+           0       0.89      0.79      0.83        80
+           1       0.81      0.90      0.85        80
+
+    accuracy                           0.84       160
+   macro avg       0.85      0.84      0.84       160
+weighted avg       0.85      0.84      0.84       160
+
+confusion matrix:  [[63 17]
+ [ 8 72]]
+
+Top 10 for class 0 (index 0):
+call                 0.001555
+bed                  0.001537
+great                0.001364
+locat                0.001325
+time                 0.001257
+day                  0.001234
+check                0.001192
+floor                0.001166
+good                 0.001092
+nice                 0.001078
+
+Top 10 for class 1 (index 1):
+look                 0.001619
+check                0.001602
+clean                0.001392
+time                 0.001351
+experi               0.001346
+arriv                0.001323
+seem                 0.001307
+reserv               0.001304
+smell                0.001289
+front                0.001242
+
+
+Classification Tree
+
+Chosen hyperparemeters with highest accuracy value: {'max_depth': nan, 'min_samples_leaf': 2.0, 'ccp_alpha': 0.0, 'test_accuracy': 0.7125}
+accuracy:  0.7125
+Table:                precision    recall  f1-score   support
+
+           0       0.71      0.71      0.71        80
+           1       0.71      0.71      0.71        80
+
+    accuracy                           0.71       160
+   macro avg       0.71      0.71      0.71       160
+weighted avg       0.71      0.71      0.71       160
+
+confusion matrix:  [[57 23]
+ [23 57]]
+
+Top 10 Most Important Features ClassificationTree:
+         feature  importance
+2072       smell    0.091678
+865        final    0.065776
+1341      luxuri    0.064686
+1805      recent    0.059334
+1918        rude    0.039223
+135       around    0.032177
+1415  millennium    0.030309
+1554       onlin    0.023773
+1096        hope    0.019585
+925     frequent    0.018439
+
+
+Randomforest
+Shape of INPUT: (640, 4672)
+accuracy:  0.8375
+Table:                precision    recall  f1-score   support
+
+           0       0.83      0.85      0.84        80
+           1       0.85      0.82      0.84        80
+
+    accuracy                           0.84       160
+   macro avg       0.84      0.84      0.84       160
+weighted avg       0.84      0.84      0.84       160
+
+confusion matrix:  [[68 12]
+ [14 66]]
+
+Top 10 Most Important Features RandomForest:
+         feature  importance
+3255      recent    0.018115
+3730       smell    0.016764
+1544       final    0.014907
+2427      luxuri    0.013419
+2392        look    0.011319
+1323        elev    0.011308
+2380       locat    0.010389
+1023       decid    0.010262
+2565  millennium    0.008987
+1435      expect    0.008926
+
+
+GradBoost
+Shape of INPUT: (640, 4672)
+accuracy:  0.8125
+Table:                precision    recall  f1-score   support
+
+           0       0.81      0.81      0.81        80
+           1       0.81      0.81      0.81        80
+
+    accuracy                           0.81       160
+   macro avg       0.81      0.81      0.81       160
+weighted avg       0.81      0.81      0.81       160
+
+confusion matrix:  [[65 15]
+ [15 65]]
+
+Top 10 Most Important Features:
+     feature  importance
+3730   smell    0.020347
+3255  recent    0.018618
+2427  luxuri    0.014122
+1544   final    0.013989
+3561    seem    0.013702
+2392    look    0.012365
+1435  expect    0.011955
+3457    rude    0.011368
+2380   locat    0.011020
+1437  experi    0.010176

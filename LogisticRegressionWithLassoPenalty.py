@@ -5,6 +5,7 @@ from sklearn.metrics import accuracy_score
 from sklearn.pipeline import make_pipeline
 from sklearn.model_selection import GridSearchCV
 from evaluate import evaluate_model
+from OpenFiles import Split_data
 
 class TrainModel2:
     @staticmethod
@@ -24,7 +25,7 @@ class TrainModel2:
 
         # Define the parameter grid to search
         param_grid = {
-            vectorizer_ngram: [(1, 1), (1, 2)],  # Unigrams and bigrams
+            vectorizer_ngram: [(2,2)],  # Unigrams and bigrams
             'logisticregression__C': [0.01, 0.1, 1.0, 10.0]  # Inverse of regularization strength
         }
 
@@ -64,10 +65,7 @@ class TrainModel2:
 def Output_Logistic(train_df, test_df):
 
     models = [
-        ("The countvectorizer model", "The tuned countvectorizer model", CountVectorizer(), "countvectorizer__ngram_range", "countvectorizer"),
-        ("The countervectorizer model with preprocessing ", "The tuned countvectorizer model with preprocessing ", CountVectorizer(lowercase=True, stop_words="english"), "countvectorizer__ngram_range", "countvectorizer"),
         ("The tfifdvectorizer model ", "The tuned tfifdvectorizer model ", TfidfVectorizer(), 'tfidfvectorizer__ngram_range', "tfidfvectorizer"),
-        ("The tfifdvectorizer model with preprocessing ", "The tuned tfifdvectorizer model with preprocessing ", TfidfVectorizer(lowercase=True, stop_words="english"), 'tfidfvectorizer__ngram_range', "tfidfvectorizer")
     ]
 
     accuracy = []
@@ -87,5 +85,11 @@ def Output_Logistic(train_df, test_df):
             best_model = highest
     
     print("The best model is:", best_model[:2])
+    print("With hyperparameters", best_model[2])
     evaluate_model(best_model[2], test_df["content"], test_df["label"])
     TrainModel2.give_feature_importance(best_model[2], best_model[3])
+
+if __name__ == '__main__':
+    train_df, test_df = Split_data.split_data(train=(1,2,3,4), test=(5,))
+    Output_Logistic(train_df, test_df)
+    

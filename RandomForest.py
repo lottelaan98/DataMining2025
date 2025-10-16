@@ -17,7 +17,7 @@ from sklearn.metrics import (accuracy_score ,
                              classification_report)
 from sklearn.ensemble import (RandomForestClassifier as RF, #For the random forest
                               GradientBoostingClassifier as GBR)
-from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
+from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.model_selection import GridSearchCV
 from evaluate import evaluate_model
 
@@ -95,7 +95,7 @@ def RandomF(X_train,Y_train,X_test,Y_test,m_depth_bos=23,m_features_vec=5000,gri
     """
 
     #Preprocessing: de vectorizer convert de tekst naar een matrix van token counts met parameters als wel of niet stop words, en een minimale frequency
-    vectorizer = TfidfVectorizer(max_features=m_features_vec, ngram_range=(1,2)) #max_features neemt alleen maar de top x features mee  
+    vectorizer = TfidfVectorizer(max_features=m_features_vec, ngram_range=(2,2)) #max_features neemt alleen maar de top x features mee  
     X = vectorizer.fit_transform(X_train)
     print(f"Shape of INPUT: {X.shape}")
     if not grid:
