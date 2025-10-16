@@ -1,19 +1,14 @@
-import pandas as pd
 import numpy as np
-from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from sklearn.naive_bayes import MultinomialNB
-from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
-import os
-import OpenFiles
-from OpenFiles import FileContent, FileLoader, Split_data, Word_preprocessing
+from sklearn.metrics import accuracy_score
 from sklearn.pipeline import make_pipeline
 from sklearn.model_selection import GridSearchCV
 from evaluate import evaluate_model
 
 class TrainModel1:
     @staticmethod
-    def train_model(train_df, test_df, vectorizer):
+    def train_model(train_df, vectorizer):
         # Create a pipeline that first vectorizes the text data and then applies the Multinomial Naive Bayes classifier
         model = make_pipeline(vectorizer, MultinomialNB())
 
@@ -23,7 +18,7 @@ class TrainModel1:
         return model
 
     @staticmethod
-    def hyperparameter_tuning1(train_df, test_df, vectorizer, vectorizer_ngram):
+    def hyperparameter_tuning1(train_df, vectorizer, vectorizer_ngram):
         # Create a pipeline that first vectorizes the text data and then applies the Multinomial Naive Bayes classifier
         model = make_pipeline(vectorizer, MultinomialNB())
 
@@ -80,9 +75,9 @@ def Output_MNB(train_df, test_df):
     accuracy = []
     
     for i in models:
-        model = TrainModel1.train_model(train_df, test_df, i[2])
+        model = TrainModel1.train_model(train_df, i[2])
         accuracy.append([i[0], TrainModel1.accuracyvalue(model, test_df["content"], test_df["label"]), model])
-        best_model = TrainModel1.hyperparameter_tuning1(train_df, test_df, i[2], i[3])
+        best_model = TrainModel1.hyperparameter_tuning1(train_df, i[2], i[3])
         accuracy.append([i[1], TrainModel1.accuracyvalue(best_model, test_df["content"], test_df["label"]), best_model])
 
     best_model = []

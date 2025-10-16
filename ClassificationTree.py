@@ -8,16 +8,12 @@ Model 3 — Single classification tree (handmatig tunen)
 - We rapporteren een overzichtstabel en tonen een classification report voor de beste instelling
 """
 
-import numpy as np
 import pandas as pd
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
-from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
+from sklearn.metrics import accuracy_score
 from sklearn.pipeline import make_pipeline
 from sklearn.tree import DecisionTreeClassifier
 from evaluate import evaluate_model
-
-import OpenFiles
-from OpenFiles import Split_data
 
 def make_tree_pipeline(max_depth=None, min_samples_leaf=1, ccp_alpha=0.0):
     return make_pipeline(

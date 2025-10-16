@@ -1,21 +1,14 @@
-import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
-from pandas.plotting import table
-from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
-from sklearn.linear_model import LogisticRegression, LogisticRegressionCV, Lasso
-from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
-import os
-import OpenFiles
-from OpenFiles import FileContent, FileLoader, Split_data
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score
 from sklearn.pipeline import make_pipeline
 from sklearn.model_selection import GridSearchCV
 from evaluate import evaluate_model
 
 class TrainModel2:
     @staticmethod
-    def train_model(train_df, test_df, vectorizer):
+    def train_model(train_df, vectorizer):
         # Create a pipeline that first vectorizes the text data and then applies the Logistic Regression with Lasso penalty
         model = make_pipeline(vectorizer, LogisticRegression(penalty='l1', solver='saga', max_iter=5000))
 
@@ -25,7 +18,7 @@ class TrainModel2:
         return model
 
     @staticmethod
-    def hyperparameter_tuning(train_df, test_df, vectorizer, vectorizer_ngram):
+    def hyperparameter_tuning(train_df, vectorizer, vectorizer_ngram):
         # Create a pipeline that first vectorizes the text data and then applies the Logistic Regression with Lasso penalty
         model = make_pipeline(vectorizer, LogisticRegression(penalty='l1', solver='saga', max_iter=5000))
 
@@ -80,9 +73,9 @@ def Output_Logistic(train_df, test_df):
     accuracy = []
     
     for i in models:
-        model = TrainModel2.train_model(train_df, test_df, i[2])
+        model = TrainModel2.train_model(train_df, i[2])
         accuracy.append([i[0], TrainModel2.accuracyvalue(model, test_df["content"], test_df["label"]), model, i[4]])
-        best_model = TrainModel2.hyperparameter_tuning(train_df, test_df, i[2], i[3])
+        best_model = TrainModel2.hyperparameter_tuning(train_df, i[2], i[3])
         accuracy.append([i[1], TrainModel2.accuracyvalue(best_model, test_df["content"], test_df["label"]), best_model, i[4]])
 
     best_model = []
