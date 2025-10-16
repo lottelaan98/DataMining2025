@@ -9,6 +9,11 @@ from collections import Counter
 from nltk.tokenize import word_tokenize, RegexpTokenizer
 from nltk.corpus import stopwords
 import re
+#import texthero as hero
+import matplotlib.pyplot as plt
+import warnings
+
+warnings.filterwarnings('ignore')
 
 # negative polarity
 # the r in front of the string indicates a raw string literal, which treats backslashes as literal characters
@@ -147,7 +152,7 @@ class Word_preprocessing:
         
         word_freq = Counter(all_words)
         total_words = len(all_words)
-        
+
         # Words appearing more than threshold become stopwords
         custom_stops = {word for word, freq in word_freq.items() 
                     if freq / total_words > threshold}
@@ -163,6 +168,32 @@ class Word_preprocessing:
         df.loc[:, 'content'] = df['content'].apply(clean)
 
         return df
+    
+class Visualise_data:
+
+    def topwords_barchart(df):
+        word_counts = Counter()
+
+        for text in df["content"]:
+            text = text.lower()
+            text = re.sub(r"[^0-9a-zA-Z\s]+", " ", text)
+            words = text.split()
+            word_counts.update(words)
+
+        top_n = word_counts.most_common(10)
+
+        labels, counts = zip(*top_n)
+
+        # Create the bar chart
+        plt.figure(figsize=(8, 6))  # Adjust figure size as desired
+        plt.bar(labels, counts)
+        plt.xlabel("Words")
+        plt.ylabel("Frequency")
+        plt.title("Top 10 Most Frequent Words")
+        plt.xticks(rotation=45, ha="right")  # Rotate x-axis labels for readability
+        plt.tight_layout()
+        plt.show()
+
     
 class Split_data:
     @staticmethod
@@ -211,3 +242,5 @@ if __name__ == "__main__":
     print("Train:", train_df["subfolder"].value_counts().to_dict())
     print("Test :", test_df["subfolder"].value_counts().to_dict())
     print("Voorbeeld train-rij:\n", train_df.head(1))
+
+    print(Visualise_data.topwords_barchart(train_df))
