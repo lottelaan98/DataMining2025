@@ -1,5 +1,6 @@
 WITH STEMMING AND LEMMETIZATION
 
+The logistic regression model
 The best model is: ['The tuned tfifdvectorizer model ', 0.8375]
 With hyperparameters Pipeline(steps=[('tfidfvectorizer', TfidfVectorizer()),
                 ('logisticregression',

@@ -17,7 +17,7 @@ from evaluate import evaluate_model
 
 def make_tree_pipeline(max_depth=None, min_samples_leaf=1, ccp_alpha=0.0):
     return make_pipeline(
-        CountVectorizer(min_df=2, ngram_range=(1, 1)),
+        CountVectorizer(min_df=2, ngram_range=(1, 2)),
         TfidfTransformer(),
         DecisionTreeClassifier(
             max_depth=max_depth,
