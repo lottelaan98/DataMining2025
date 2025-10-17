@@ -1,8 +1,6 @@
 """
-This module trains and evaluates a Logistic Regression classifier with L1 regularization (LASSO) 
-for text data. It builds a scikit-learn pipeline with vectorization (TF–IDF), 
-performs hyperparameter tuning using 5-fold cross-validation (GridSearchCV) on C and n-gram range, 
-reports performance, and shows the most important words (feature weights from coefficients).
+This module trains and evaluates a Logistic Regression classifier with L1 regularization (LASSO) for text data. It builds a scikit-learn pipeline with vectorization (TF–IDF), 
+performs hyperparameter tuning using 5-fold cross-validation (GridSearchCV) on C and n-gram range, reports performance, and shows the most important words (feature weights from coefficients).
 """
 
 import numpy as np
