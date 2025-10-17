@@ -46,47 +46,47 @@ bed: -8.263
 ---------------------------------------------------------------------------------------------
 
 Multinomial Naive Bayes
-with unigram and LEMMETIZATION
+Uni and Bigram - without lemmatization and stemming
 
-The best model is: ['The tuned tfifdvectorizer model ', 0.85625]
-With hyperparameters Pipeline(steps=[('tfidfvectorizer', TfidfVectorizer()),
+The best model is: ['The tuned tfifdvectorizer model ', 0.8875]
+With hyperparameters Pipeline(steps=[('tfidfvectorizer', TfidfVectorizer(ngram_range=(1, 2))),
                 ('multinomialnb', MultinomialNB(alpha=0.5))])
-accuracy:  0.85625
+accuracy:  0.8875
 Table:                precision    recall  f1-score   support
 
-           0       0.90      0.80      0.85        80
-           1       0.82      0.91      0.86        80
+           0       0.94      0.82      0.88        80
+           1       0.84      0.95      0.89        80
 
-    accuracy                           0.86       160
-   macro avg       0.86      0.86      0.86       160
-weighted avg       0.86      0.86      0.86       160
+    accuracy                           0.89       160
+   macro avg       0.89      0.89      0.89       160
+weighted avg       0.89      0.89      0.89       160
 
-confusion matrix:  [[64 16]
- [ 7 73]]
+confusion matrix:  [[66 14]
+ [ 4 76]]
 
 Top 10 for class 0 (index 0):
-bed                  0.001818
-great                0.001636
-location             0.001545
-time                 0.001494
-day                  0.001477
-floor                0.001378
-never                0.001272
-good                 0.001267
-elevator             0.001263
-nice                 0.001256
+great                0.000197
+location             0.000184
+bed                  0.000181
+day                  0.000163
+never                0.000158
+good                 0.000155
+called               0.000153
+floor                0.000153
+nice                 0.000153
+front                0.000149
 
 Top 10 for class 1 (index 1):
-time                 0.001605
-experience           0.001604
-front                0.001474
-got                  0.001447
-could                0.001412
-bed                  0.001405
-finally              0.001317
-hour                 0.001312
-rude                 0.001302
-check                0.001297
+experience           0.000181
+time                 0.000175
+front                0.000175
+got                  0.000171
+could                0.000169
+finally              0.000157
+arrived              0.000154
+first                0.000154
+rude                 0.000153
+check                0.000153
 
 ---------------------------------------------------------------------------------------------
 
