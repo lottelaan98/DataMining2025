@@ -25,7 +25,7 @@ class TrainModel2:
 
         # Define the parameter grid to search
         param_grid = {
-            vectorizer_ngram: [(2,2)],  # Unigrams and bigrams
+            vectorizer_ngram: [(1, 1)],  # Unigrams and bigrams
             'logisticregression__C': [0.01, 0.1, 1.0, 10.0]  # Inverse of regularization strength
         }
 

@@ -87,7 +87,7 @@ class Word_preprocessing:
         text = ' '.join(words)
         return text
     
-    def apply_preprocessing(df, stem=False, lemmatize=False):
+    def apply_preprocessing(df, stem=True, lemmatize=False):
         processed_contents = []
         for content in df['content']:
             if stem:

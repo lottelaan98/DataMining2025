@@ -25,7 +25,7 @@ class TrainModel1:
 
         # Define the parameter grid to search
         param_grid = {
-            vectorizer_ngram: [(2, 2)],  # Unigrams and bigrams
+            vectorizer_ngram: [(1, 1)],  # Unigrams and bigrams
             'multinomialnb__alpha': [0.1, 0.5, 1.0]  # Smoothing parameter
         }
 
