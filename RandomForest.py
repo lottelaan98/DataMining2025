@@ -1,8 +1,11 @@
 """
-models.py
-----------
-Bevat het model en trainingsfunctie voor de Single Classification Tree
-uit de op_spam_v1.4 opdracht.
+RandomForests model
+
+Contains:
+1) Training + simple CV tuning for a single Decision Tree (ccp_alpha),
+2) Utility to extract top features from a trained tree,
+3) Random Forest training/evaluation for text data (with optional GridSearchCV).
+
 """
 
 from sklearn.tree import DecisionTreeClassifier
@@ -24,29 +27,31 @@ from evaluate import evaluate_model
 
 def train_single_tree(X_train, y_train, cv=5):
     """
-    Train een enkele DecisionTreeClassifier met tuning van ccp_alpha via cross-validatie.
+    Train a single DecisionTreeClassifier and tune `ccp_alpha` via cross-validation.
 
     Parameters
     ----------
-    X_train : sparse matrix
-        Featurematrix van de trainingsteksten.
-    y_train : array
-        Labels (0 = truthful, 1 = deceptive).
+    X_train : array-like or sparse matrix
+        Feature matrix for training (e.g., TF–IDF features).
+    y_train : array-like
+        Training labels (0 = truthful, 1 = deceptive).
     cv : int, default=5
-        Aantal cross-validatie folds.
+        Number of cross-validation folds.
 
     Returns
     -------
     model : DecisionTreeClassifier
-        Het beste model na tuning.
+        Best-scoring model after tuning.
     best_alpha : float
-        De gekozen waarde van ccp_alpha.
+        Selected value of `ccp_alpha`.
     best_score : float
-        De beste F1-score tijdens cross-validatie.
+        Best cross-validated F1 score.
     """
+    # Base model; only ccp_alpha is tuned here
     model = DecisionTreeClassifier(random_state=42)
     param_grid = {"ccp_alpha": [0.0, 0.0005, 0.001, 0.005, 0.01]}
 
+    # F1-based selection to balance precision/recall
     grid = GridSearchCV(model, param_grid, cv=cv, scoring="f1")
     grid.fit(X_train, y_train)
 
@@ -58,21 +63,22 @@ def train_single_tree(X_train, y_train, cv=5):
 
 
 def get_top_features(model, vectorizer, top_n=10):
-    """
-    Geef de top-n belangrijkste woorden op basis van feature_importances_.
+"""
+    Return the top-N most important tokens based on `feature_importances_`.
 
     Parameters
     ----------
     model : DecisionTreeClassifier
-        Getraind model.
-    vectorizer : CountVectorizer of TfidfVectorizer
-        De vectorizer die is gebruikt voor feature-namen.
-    top_n : int
-        Aantal topwoorden dat je wilt terugzien.
+        Fitted decision tree.
+    vectorizer : CountVectorizer or TfidfVectorizer
+        Vectorizer used to obtain feature names.
+    top_n : int, default=10
+        Number of top tokens to return.
 
     Returns
     -------
-    lijst van tuples (woord, importance)
+    list of (token, importance)
+        Sorted by importance (descending); empty list if no importances.
     """
     import numpy as np
 
@@ -86,25 +92,47 @@ def get_top_features(model, vectorizer, top_n=10):
 
 
 def RandomF(X_train,Y_train,X_test,Y_test,m_depth_bos=23,m_features_vec=5000,grid = False):
-    """ 
-    X_train: training data, dus tekst van reviews
-    Y_train: training labels
-    m_features: parameter voor random forest
-    grid: Of we wel of niet een grid search doen, als grid True is doen we dat wel en returnen we het beste model dat daar uitkomt
-          de default values die al ingevuld zijn (bij if not grid) zijn het resultaat van een gridsearch en behalen de hoogste accuracy
+    """
+    Train and evaluate a Random Forest classifier on text data (TF–IDF features).
+
+    Parameters
+    ----------
+    X_train : list-like
+        Training text documents (raw strings).
+    Y_train : array-like
+        Training labels.
+    X_test : list-like
+        Test text documents (raw strings).
+    Y_test : array-like
+        Test labels.
+    m_depth_bos : int or None, default=23
+        Max depth for trees in the Random Forest.
+    m_features_vec : int, default=5000
+        Max number of TF–IDF vocab features (top-K by frequency).
+    grid : bool, default=False
+        If True, perform GridSearchCV over a small parameter set; otherwise
+        train with predefined hyperparameters (from prior tuning).
+
+    Returns
+    -------
+    model : RandomForestClassifier
+        Fitted Random Forest (best estimator when grid=True; fixed config otherwise).
     """
 
-    #Preprocessing: de vectorizer convert de tekst naar een matrix van token counts met parameters als wel of niet stop words, en een minimale frequency
+    # 1) Vectorize text as TF–IDF (unigrams + bigrams), limited to top `m_features_vec` tokens
     vectorizer = TfidfVectorizer(max_features=m_features_vec, ngram_range=(1, 2)) #max_features neemt alleen maar de top x features mee  
     X = vectorizer.fit_transform(X_train)
     print(f"Shape of INPUT: {X.shape}")
     if not grid:
+        # 2) Train Random Forest with preset hyperparameters (from previous tuning)
         bos = RF(n_estimators=250,max_features="sqrt",max_depth=m_depth_bos,random_state=0, min_samples_split=2, oob_score=True,criterion='entropy',max_leaf_nodes=60,verbose=0)
         
         bos.fit(X,Y_train)
 
+        # 3) Evaluate on test data
         evaluate_model(bos, vectorizer.transform(X_test), Y_test)
 
+        # 4) Show top features by RF importance
         importances = bos.feature_importances_
         feature_names = vectorizer.get_feature_names_out()
 
@@ -121,6 +149,7 @@ def RandomF(X_train,Y_train,X_test,Y_test,m_depth_bos=23,m_features_vec=5000,gri
 
 
     else:
+        # 2-alt) Grid search over a small space (here just max_depth; others fixed)
         bosgrid = RF(max_features="sqrt",random_state=0,n_estimators=250, criterion='entropy',max_leaf_nodes=60)
 
         params = { 'max_depth': [20,23,30,None],
