@@ -31,7 +31,7 @@ def make_tree_pipeline(max_depth=None, min_samples_leaf=1, ccp_alpha=0.0):
     )
 
 def evaluate_accuracy(model, test_df):
-     """
+    """
     Predict on test_df and return (accuracy, predictions).
     """
     preds = model.predict(test_df["content"])

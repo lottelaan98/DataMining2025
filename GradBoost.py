@@ -25,7 +25,7 @@ from sklearn.model_selection import GridSearchCV
 from evaluate import evaluate_model
 
 def GradBoost(X_train,Y_train,X_test,Y_test,m_features_vec=5000,m_depth=15,lam=0.01,n_trees=500,grid = False):
-   """
+    """
     Train and evaluate a Gradient Boosting classifier.
 
     Parameters:

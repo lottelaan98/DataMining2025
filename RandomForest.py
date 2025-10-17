@@ -63,23 +63,23 @@ def train_single_tree(X_train, y_train, cv=5):
 
 
 def get_top_features(model, vectorizer, top_n=10):
-"""
-    Return the top-N most important tokens based on `feature_importances_`.
-
-    Parameters
-    ----------
-    model : DecisionTreeClassifier
-        Fitted decision tree.
-    vectorizer : CountVectorizer or TfidfVectorizer
-        Vectorizer used to obtain feature names.
-    top_n : int, default=10
-        Number of top tokens to return.
-
-    Returns
-    -------
-    list of (token, importance)
-        Sorted by importance (descending); empty list if no importances.
     """
+        Return the top-N most important tokens based on `feature_importances_`.
+
+        Parameters
+        ----------
+        model : DecisionTreeClassifier
+            Fitted decision tree.
+        vectorizer : CountVectorizer or TfidfVectorizer
+            Vectorizer used to obtain feature names.
+        top_n : int, default=10
+            Number of top tokens to return.
+
+        Returns
+        -------
+        list of (token, importance)
+            Sorted by importance (descending); empty list if no importances.
+        """
     import numpy as np
 
     importances = getattr(model, "feature_importances_", None)

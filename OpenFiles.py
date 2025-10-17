@@ -79,9 +79,8 @@ class FileLoader:
         return content_list
     
 class Word_preprocessing:
-        """Text preprocessing utilities (stopwords, stemming, lemmatization, etc.)."""
+    """Text preprocessing utilities (stopwords, stemming, lemmatization, etc.)."""
     @staticmethod
-    
     def stem_text(text):
         # Porter stemming on whitespace-split tokens
         ps = PorterStemmer()
@@ -166,7 +165,7 @@ class Word_preprocessing:
         return df
     
 class Visualise_data:
-        """Simple visualization helpers for token frequency."""
+    """Simple visualization helpers for token frequency."""
     def topwords_barchart(df):
         """
         Plot a bar chart of the top-k most frequent tokens in df['content'].
@@ -195,7 +194,7 @@ class Visualise_data:
 
     
 class Split_data:
-"""Load files into a DataFrame, label them, split into folds, and apply preprocessing."""
+    """Load files into a DataFrame, label them, split into folds, and apply preprocessing."""
     @staticmethod
     def split_data(file_list=negative_polarity, train=(1,2,3,4), test=(5,)):
         # 1) Load recursively and convert to a DataFrame
