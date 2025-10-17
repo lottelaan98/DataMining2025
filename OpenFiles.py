@@ -1,10 +1,19 @@
+"""
+
+This module loads raw text files from a nested folder structure, builds a labeled pandas
+DataFrame, cleans and normalizes the text (stopword removal, optional stemming/lemmatization,
+and dataset-driven custom stopwords), splits into train/test folds, and offers a simple
+visualization of the most frequent words.
+
+"""
+
 import os
 import pandas as pd
 import nltk 
 from nltk.stem import PorterStemmer, WordNetLemmatizer
-# nltk.download('wordnet')
-# nltk.download('punkt_tab')
-# nltk.download('stopwords')
+nltk.download('wordnet')
+nltk.download('punkt_tab')
+nltk.download('stopwords')
 from collections import Counter
 from nltk.tokenize import word_tokenize, RegexpTokenizer
 from nltk.corpus import stopwords
@@ -15,8 +24,7 @@ import warnings
 
 warnings.filterwarnings('ignore')
 
-# negative polarity
-# the r in front of the string indicates a raw string literal, which treats backslashes as literal characters
+# Root directory of the dataset (adjust to your local path)
 negative_polarity = r"data/op_spam_v1.4/negative_polarity" # fill in your own path
 
 # listdir function: list all files and folders in a directory
@@ -71,9 +79,11 @@ class FileLoader:
         return content_list
     
 class Word_preprocessing:
+        """Text preprocessing utilities (stopwords, stemming, lemmatization, etc.)."""
     @staticmethod
     
     def stem_text(text):
+        # Porter stemming on whitespace-split tokens
         ps = PorterStemmer()
         words = text.split()
         words = [ps.stem(word) for word in words]
@@ -81,6 +91,7 @@ class Word_preprocessing:
         return text
     
     def lemmatize_text(text):
+        # WordNet lemmatization on whitespace-split tokens
         lemmatizer = WordNetLemmatizer()
         words = text.split()
         words = [lemmatizer.lemmatize(word) for word in words]
@@ -88,6 +99,10 @@ class Word_preprocessing:
         return text
     
     def apply_preprocessing(df, stem=True, lemmatize=True):
+        """
+        Apply stemming and/or lemmatization on the 'content' column in a copy of df.
+        Order: stem -> lemmatize (adjust if you prefer lemmatize first).
+        """
         processed_contents = []
         for content in df['content']:
             if stem:
@@ -99,6 +114,9 @@ class Word_preprocessing:
         return df
 
     def stop_words(df):
+        """
+        Remove standard English stopwords and non-letter characters; lowercase everything.
+        """
         stopw = set(stopwords.words("english"))
         tokenizer = RegexpTokenizer(r"[A-Za-z]+")
 
@@ -115,9 +133,14 @@ class Word_preprocessing:
         return df
     
     def create_custom_stopwords(df, threshold=0.0045):
+        """
+        Create dataset-specific stopwords: any token with frequency > threshold of all tokens
+        is removed. This helps drop very common, non-informative tokens beyond standard stopwords.
+        """
         # Count word frequencies across all texts
         tokenizer = RegexpTokenizer(r'\w+')
 
+        # Aggregate all tokens across documents (lowercased)
         all_words = []
         for text in df["content"]:
             words = word_tokenize(text.lower())
@@ -126,7 +149,7 @@ class Word_preprocessing:
         word_freq = Counter(all_words)
         total_words = len(all_words)
 
-        # Words appearing more than threshold become stopwords
+        # Build custom stopword set using relative frequency
         custom_stops = {word for word, freq in word_freq.items() 
                     if freq / total_words > threshold}
         
@@ -143,8 +166,11 @@ class Word_preprocessing:
         return df
     
 class Visualise_data:
-
+        """Simple visualization helpers for token frequency."""
     def topwords_barchart(df):
+        """
+        Plot a bar chart of the top-k most frequent tokens in df['content'].
+        """
         word_counts = Counter()
 
         for text in df["content"]:
@@ -169,8 +195,10 @@ class Visualise_data:
 
     
 class Split_data:
+"""Load files into a DataFrame, label them, split into folds, and apply preprocessing."""
     @staticmethod
     def split_data(file_list=negative_polarity, train=(1,2,3,4), test=(5,)):
+        # 1) Load recursively and convert to a DataFrame
         
         files = FileLoader.load_files_recursive(file_list)
         
@@ -180,25 +208,27 @@ class Split_data:
             "filename": file.filename,
             "content": file.content
          } for file in files])
-        
-        # df = Word_preprocessing.apply_preprocessing(df, stem=True, lemmatize=True)
 
+        # 2) Create binary labels from folder name: 1 = deceptive, 0 = truthful
         df["label"] = (df["folder"].str.contains("deceptive", case=False)).astype(int)
-        # 1 = deceptive, 0 = truthful
-        
+
+        # 3) Split by fold names (e.g., "fold1", "fold2", ...)
         train_data = {f"fold{i}" for i in train}
         test_data = {f"fold{i}" for i in test}
 
+        # Correct filtering + reset of index
         train_df = df[df['subfolder'].isin(train_data).reset_index(drop=True)]
         test_df = df[df['subfolder'].isin(test_data).reset_index(drop=True)]
 
+        # 4) Standard stopwords removal
         train_df = Word_preprocessing.stop_words(train_df)
         test_df = Word_preprocessing.stop_words(test_df)
 
+        # 5) Dataset-driven custom stopwords (applied separately to avoid leakage)
         train_df = Word_preprocessing.create_custom_stopwords(train_df)
         test_df = Word_preprocessing.create_custom_stopwords(test_df)
 
-
+        # 6) Optional stemming/lemmatization (can be toggled)
         train_df = Word_preprocessing.apply_preprocessing(train_df)
         test_df = Word_preprocessing.apply_preprocessing(test_df)
 
@@ -206,19 +236,11 @@ class Split_data:
     
 
 if __name__ == "__main__":
-        # calls the function with the negative_polarity path and stores the result in files
-        # files = FileLoader.load_files_recursive(negative_polarity) 
-
-        # print(f"Total folders loaded: {len(set(file.folder for file in files))}")
-        # print(f"Subfolders in folder: {len(set(file.subfolder for file in files))}")
-        # print(f"Total subfolders loaded: {len(set(file.folder for file in files)) * len(set(file.subfolder for file in files))}")
-        # print(f"Total files loaded: {len(files)}")
-        # print(files[0])
-
+# Example: train on folds 1–4, test on fold 5
     train_df, test_df = Split_data.split_data(train=(1,2,3,4), test=(5,))
+        
     print("Train:", train_df["subfolder"].value_counts().to_dict())
     print("Test :", test_df["subfolder"].value_counts().to_dict())
     print("Voorbeeld train-rij:\n", train_df.head(1))
     print(train_df["content"].iloc[0])
-
     print(Visualise_data.topwords_barchart(train_df))
