@@ -1,8 +1,6 @@
 """
-This module trains and evaluates a Multinomial Naive Bayes text classifier.
-It builds a scikit-learn pipeline with vectorization (TF–IDF), performs
-hyperparameter tuning via 5-fold cross-validation (GridSearchCV) over
-alpha (smoothing) and n-gram range, reports performance, and prints the
+This module trains and evaluates a Multinomial Naive Bayes text classifier. 
+It builds a scikit-learn pipeline with vectorization (TF–IDF), performs hyperparameter tuning via 5-fold cross-validation (GridSearchCV) over alpha (smoothing) and n-gram range, reports performance, and prints the
 most indicative tokens per class using the learned log probabilities.
 """
 
